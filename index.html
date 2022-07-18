@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagination</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        [x-cloak] { display: none !important; }
+        .post p{
+            transition-property: height;
+            transition-duration: .2s;
+            transition-timing-function: cubic-bezier(0.34, 0.32, 0.68, 0.75);
+            transition-delay: 0s;
+        }
+        .post p.show{
+            height: autp;
+        }
+        .post p.hidden{
+            height: 0px;
+            overflow: hidden;
+            padding: 0!important;
+            margin: 0!important;
+            border: 0!important;
+        }
+        .post .active{
+            background-color: #e7f1ff!important;
+            color: #0c63e4!important;
+            transition: .2s;
+        }
+    </style>
+</head>
+<body>
+    <div x-data="posts" class="container" @currentpagechange="setCurrentPage($event.detail.currentPage)">
+        <div>
+            <div class="mb-3">
+                <label for="perPage" class="form-label">Nb display per page</label>
+                <input type="number" x-model.number="perPage" class="form-control" id="perPage">
+            </div>
+        </div>
+        <template x-if="postList()?.length > 0">   
+            <div class="rounded border my-2 overflow-hidden">
+                <template x-for="p in sortPost()" :key="p.id">
+                    <!-- <p x-text="p.title"></p> -->
+                    <div x-data="post(p)" class="post">
+                        <a href="#" class="fw-bold p-3 w-100 text-dark text-uppercase d-block bg-ligth text-decoration-none border-bottom" :class="{'active' : show}" @click.prevent="changeShow()">
+                            <span x-text="post.id"></span>
+                            <span x-text="post.title"></span>
+                        </a>
+                        <p class="p-3 text-gray border-bottom m-0" :class="show ? 'show' : 'hidden'" x-text="post.body" x-cloak @close.window="close($event.detail.id)"></p>
+                    </div>
+                </template>
+            </div>         
+        </template>
+        <template x-if="totalPages() > 1">
+            <div class="mt-3" x-data="pagination(totalPages(),currentPage)"  x-init="$watch('totalPages', value => totalPages = value)">
+                <ul class="pagination justify-content-center">
+                    <!-- <li class="page-item" :class="{'disabled' : isInFirstPage()}">
+                        <a class="page-link" href="#" @click.prevent="firstPage()">First</a>
+                    </li> -->
+                    <li class="page-item" :class="{'disabled' : isInFirstPage()}">
+                        <a class="page-link" href="#" @click.prevent="decPage()">Previous</a>
+                    </li>
+                    <template x-for="item in pagesPool()">
+                        <li class="page-item" :class="{'active' : item.actived}" aria-current="page">
+                            <a class="page-link" @click.prevent="setCurrentPage(item.name)" href="#" x-text="item.name"></a>
+                        </li>
+                    </template>
+                    <li class="page-item" :class="{'disabled' : isInLastPage()}">
+                        <a class="page-link" href="#" @click.prevent="incPage()">Next</a>
+                    </li>
+                    <!-- <li class="page-item" :class="{'disabled' : isInLastPage()}">
+                        <a class="page-link" href="#" @click.prevent="lastPage()">Last</a>
+                    </li> -->
+                </ul>
+            </div>
+        </template>
+        <!-- <template x-teleport="body">
+
+            <div x-data="articles">
+                <template x-for="item in sortArticles">
+                    <p x-text="item"></p>
+                </template>
+                <template x-if="totalPages() > 1">
+                    <div class="mt-3" x-data="pagination(totalPages(),currentPage,3)" x-init="$watch('totalPages', value => console.log({dispatchtotalPages: this.totalPage}))">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" :class="{'disabled' : isInFirstPage()}">
+                                <a class="page-link" href="#" @click.prevent="decPage()">Previous</a>
+                            </li>
+                            <template x-for="item in pagesPool()">
+                                <li class="page-item" :class="{'active' : item.actived}" aria-current="page">
+                                    <a class="page-link" @click.prevent="setCurrentPage(item.name)" href="#" x-text="item.name"></a>
+                                </li>
+                            </template>
+                            <li class="page-item" :class="{'disabled' : isInLastPage()}">
+                                <a class="page-link" href="#" @click.prevent="incPage()">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+        </template> -->
+    </div>
+
+    <div x-data="number">
+        <input type="number" x-model="number">
+        <div x-data="chiffre(returnNumber())">
+            <p x-text="chiffre" x-init="$watch('returnNumber', value => chiffre = value)"></p>
+        </div>
+    </div>
+    
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/persist.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/alpine.min.js"></script>
+</body>
+</html>
