@@ -28,7 +28,6 @@ document.addEventListener('alpine:init', () => {
         },
         totalPages(){
             totalPages = Math.ceil(parseInt(this.posts.length) / this.perPage) 
-            // console.log({totalPages})
             this.totalPage = totalPages
             return totalPages
         },
@@ -153,7 +152,7 @@ document.addEventListener('alpine:init', () => {
         setCurrentPage(nb){
             if(typeof nb == 'number')
                 this.page = parseInt(nb)-1
-        }
+        },
         // firstPage(){
         //     this.page = 0
         //     // this.currentPageChanger()
@@ -165,10 +164,10 @@ document.addEventListener('alpine:init', () => {
         // currentPageChanger(){
         //     this.$dispatch('currentpagechange', {currentPage : this.currentPage})
         // },
-        // setTotalPages(totalPages){
-        //     console.log({totalPages})
-        //     this.totalPages = parseInt(totalPages)
-        // },
+        setTotalPages(totalPages){
+            console.log({totalPages})
+            this.totalPages = parseInt(totalPages)
+        },
     }))
 
     Alpine.data('articles', () => ({
@@ -207,14 +206,4 @@ document.addEventListener('alpine:init', () => {
                 });
         },
     })
-
-    Alpine.data('number', ()=>({
-        number : 0,
-        returnNumber(){
-            return this.number
-        }
-    }))
-    Alpine.data('chiffre', ()=>({
-        chiffre : returnNumber
-    }))
 })
